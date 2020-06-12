@@ -692,7 +692,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
       if (rawResultString.length() > 32) {
         rawResultString = rawResultString.substring(0, 32) + " ...";
       }
-      statusView.setText(getString(resultHandler.getDisplayTitle()) + " : " + rawResultString);
+      //statusView.setText(getString(resultHandler.getDisplayTitle()) + " : " + rawResultString);
     }
 
     if (copyToClipboard && !resultHandler.areContentsSecure()) {
@@ -818,7 +818,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     if (customPromptMessage != null) {
       statusView.setText(customPromptMessage);
     } else {
-      statusView.setText(R.string.msg_default_status);
+      //statusView.setText(R.string.msg_default_status);
     }
 
     statusView.setVisibility(View.VISIBLE);

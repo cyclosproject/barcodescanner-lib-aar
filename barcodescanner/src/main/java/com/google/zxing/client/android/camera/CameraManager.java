@@ -45,8 +45,8 @@ public final class CameraManager {
 
   private static final int MIN_FRAME_WIDTH = 240;
   private static final int MIN_FRAME_HEIGHT = 240;
-  private static final int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
-  private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
+  private static final int MAX_FRAME_WIDTH = 2560; // = 5/8 * 1920
+  private static final int MAX_FRAME_HEIGHT = 1440; // = 5/8 * 1080
 
   private final Context context;
   private final CameraConfigurationManager configManager;
@@ -237,8 +237,21 @@ public final class CameraManager {
         return null;
       }
 
-      int width = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
-      int height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
+// Code added to enable portrait mode
+      int width = MIN_FRAME_WIDTH;
+      int height = MIN_FRAME_HEIGHT;
+      if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+        int tmp = 7 * screenResolution.x / 8;
+        width = (tmp) < MIN_FRAME_WIDTH ? MIN_FRAME_WIDTH : (tmp);
+
+        tmp = 1 * screenResolution.y / 3;
+        height = (tmp) < MIN_FRAME_WIDTH ? MIN_FRAME_WIDTH : ((tmp) > MAX_FRAME_HEIGHT ? MAX_FRAME_HEIGHT : (tmp));
+        Log.d(TAG, "Customized code for portrait mode in getFramingRect executed ");
+      } else {
+        // Original Code
+        width = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
+        height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
+      }
 
       int leftOffset = (screenResolution.x - width) / 2;
       int topOffset = (screenResolution.y - height) / 2;
@@ -248,8 +261,8 @@ public final class CameraManager {
     return framingRect;
   }
   
-  private static int findDesiredDimensionInRange(int resolution, int hardMin, int hardMax) {
-    int dim = 5 * resolution / 8; // Target 5/8 of each dimension
+private static int findDesiredDimensionInRange(int resolution, int hardMin, int hardMax) {
+    int dim = 7  * resolution / 8; // Target 7/8 of each dimension
     if (dim < hardMin) {
       return hardMin;
     }
@@ -257,7 +270,7 @@ public final class CameraManager {
       return hardMax;
     }
     return dim;
-  }
+}
 
   /**
    * Like {@link #getFramingRect} but coordinates are in terms of the preview frame,
